@@ -1,17 +1,18 @@
 var app = angular.module('userProfiles');
 
-app.service('mainService', function($http) {
-	this.getUsers = function() {
-		return $http({
+app.service('mainService', function($http, $q) {
+	var deferred = $q.defer();
+    this.getUsers = function() {
+        $http({
 			method: 'GET',
 			url: 'http://reqr.es/api/users?page=1'
-		});
-		// .then(function(response) {
-		// 	deffered.resolve(response.data.data);
-		// }, function(err) {
-		// 	deffered.reject(err);
-		// });
-
-		// return deffered.promise;
+		}).then(function(response) {
+            response = response.data.data
+            for(var i = 0; i < response.length; i++) {
+        response[i].first_name = 'Ralf'
+            }
+            deferred.resolve(response)
+        })
+        return deferred.promise;
 	}
 });
